@@ -65,6 +65,38 @@ SELECT DISTINCT state, city
 FROM store_msa
 ORDER BY state;
 
--- next
+-- Examine instances of trnsact table where “amt” is different than “sprice”:
+SELECT amt, sprice
+FROM trnsact
+WHERE amt <> sprice;
 
+-- Examine rows in the trsnact table that have “0” in their orgprice column:
+SELECT orgprice
+FROM trnsact
+WHERE orgprice=0;
 
+-- Examine rows in the skstinfo table where both the cost and retail price are listed as 0.00:
+SELECT cost, retail
+FROM skstinfo
+WHERE cost=0.0 AND retail=0.0;
+
+-- Examine rows in the skstinfo table where the cost is greater than the retail price:
+SELECT cost, retail
+FROM skstinfo
+WHERE cost > retail;
+
+-- Write a query that retrieve multiple columns in a precise order from using “BETWEEN”
+SELECT sprice, quantity
+FROM trnsact
+WHERE quantity BETWEEN 20 AND 100
+ORDER BY quantity;
+
+-- Write a query that retrieve multiple columns in a precise order from using “IN”
+SELECT size, color
+FROM skuinfo
+WHERE color IN ('pink', 'blue', 'green');
+
+-- Try one query that uses dates to restrict the rows you retrieve:
+SELECT saledate, quantity, sprice
+FROM trnsact
+WHERE saledate < '2012-02-05';

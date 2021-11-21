@@ -42,3 +42,29 @@ FROM store_msa
 WHERE state='FL';
 
 --Examine lists of distinct values in each of the tables:
+SELECT DISTINCT city 
+FROM strinfo 
+ORDER BY city;
+
+SELECT DISTINCT retail
+FROM skstinfo
+ORDER BY retail DESC;
+
+SELECT DISTINCT color, size
+FROM skuinfo;
+
+SELECT DISTINCT deptdesc
+FROM deptinfo
+SAMPLE 10;
+
+SELECT DISTINCT stype 
+FROM trnsact
+ORDER BY stype;
+
+SELECT DISTINCT state, city 
+FROM store_msa
+ORDER BY state;
+
+-- next
+
+

@@ -1,7 +1,7 @@
---Make the Dillard’s database your default database:
-DATABASE ua_dillards;
+--Make the company’s database your default database:
+DATABASE ua_company;
 
---Use HELP and SHOW to confirm the relational schema for Dillard’s dataset:
+--Use HELP and SHOW to confirm the relational schema for the company’s dataset:
 HELP TABLE strinfo;
 HELP TABLE skstinfo;
 HELP TABLE skuinfo;

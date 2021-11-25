@@ -66,22 +66,22 @@ FROM store_msa
 ORDER BY state;
 
 -- Examine instances of trnsact table where “amt” is different than “sprice”:
-SELECT amt, sprice
+SELECT *
 FROM trnsact
 WHERE amt <> sprice;
 
 -- Examine rows in the trsnact table that have “0” in their orgprice column:
-SELECT orgprice
+SELECT *
 FROM trnsact
 WHERE orgprice=0;
 
 -- Examine rows in the skstinfo table where both the cost and retail price are listed as 0.00:
-SELECT cost, retail
+SELECT *
 FROM skstinfo
 WHERE cost=0.0 AND retail=0.0;
 
 -- Examine rows in the skstinfo table where the cost is greater than the retail price:
-SELECT cost, retail
+SELECT *
 FROM skstinfo
 WHERE cost > retail;
 

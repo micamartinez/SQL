@@ -54,7 +54,7 @@ SELECT store,
        COUNT(DISTINCT saledate) AS dates_num,
        SUM(amt) / COUNT(DISTINCT saledate) AS avg_daily_rev
 FROM trnsact
-WHERE stype = 'P' AND store= 204 AND saledate < '2005-08-01'
+WHERE stype = 'P' AND saledate < '2005-08-01'
 GROUP BY store, month_num, year_num
 HAVING dates_num >= 20
 ORDER BY year_num ASC, month_num ASC;
@@ -65,13 +65,42 @@ ORDER BY year_num ASC, month_num ASC;
 SELECT 
        CASE WHEN s.msa_high >= 50 AND s.msa_high <= 60 THEN 'low'
             WHEN s.msa_high >= 60.01 AND s.msa_high <= 70 THEN 'medium'
-            WHEN s.msa_high > 71 THEN 'high'
-       END AS education_level,
-       COUNT(DISTINCT t.saledate) AS dates_num,
-       SUM(t.amt) / COUNT(DISTINCT t.saledate) AS avg_daily_rev
-FROM trnsact t
- JOIN store_msa s
-  ON t.store = s.store
-WHERE t.stype = 'P' AND t.store= 204 AND t.saledate < '2005-08-01'
-GROUP BY education_level
-HAVING dates_num >= 20;
+            WHEN s.msa_high >= 70.01 THEN 'high'
+            END AS education_level,
+       SUM(cleaned_data.total_rev)/SUM(cleaned_data.dates_num) AS avg_daily_revenue
+FROM store_msa s 
+ JOIN (SELECT store,
+       EXTRACT(MONTH FROM saledate) AS month_num,
+       EXTRACT(YEAR FROM saledate) AS year_num,
+       COUNT(DISTINCT saledate) AS dates_num,
+       SUM(amt) AS total_rev
+       FROM trnsact
+       WHERE stype = 'P' AND saledate < '2005-08-01'
+       GROUP BY store, month_num, year_num
+       HAVING dates_num >= 20) AS cleaned_data
+  ON cleaned_data.store = s.store
+GROUP BY education_level;
+
+
+-- Exercise 6 --
+-- Compare the average daily revenues of the stores with the highest median msa_income and the lowest median msa_income. 
+-- In what city and state were these stores, and which store had a higher average daily revenue?
+SELECT s.city, 
+       s.state,
+       s.store,
+       SUM(cleaned_data.total_rev)/SUM(cleaned_data.dates_num) AS avg_daily_revenue
+FROM store_msa s 
+ JOIN (SELECT store,
+       EXTRACT(MONTH FROM saledate) AS month_num,
+       EXTRACT(YEAR FROM saledate) AS year_num,
+       COUNT(DISTINCT saledate) AS dates_num,
+       SUM(amt) AS total_rev
+       FROM trnsact
+       WHERE stype = 'P' AND saledate < '2005-08-01'
+       GROUP BY store, month_num, year_num
+       HAVING dates_num >= 20) AS cleaned_data
+  ON cleaned_data.store = s.store
+WHERE 
+GROUP BY ;
+
+

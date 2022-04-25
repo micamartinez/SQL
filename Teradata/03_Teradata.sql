@@ -100,7 +100,34 @@ FROM store_msa s
        GROUP BY store, month_num, year_num
        HAVING dates_num >= 20) AS cleaned_data
   ON cleaned_data.store = s.store
-WHERE 
-GROUP BY ;
+WHERE s.msa_income IN (
+	(SELECT MAX(msa_income) FROM store_msa),
+	(SELECT MIN(msa_income) FROM store_msa))
+GROUP BY s.city, s.state;
 
 
+-- Exercise 7 --
+-- What is the brand of the sku with the greatest standard deviation in sprice?
+-- Only examine skus that have been part of over 100 transactions. 
+
+SELECT s.sku, s.brand, STDDEV_SAMP(t.sprice) AS std_sprice
+FROM skuinfo s 
+ JOIN trnsact t
+   ON s.sku = t.sku 
+WHERE t.stype='P' AND s.sku IS NOT NULL
+GROUP BY s.brand, s.sku
+HAVING COUNT(t.trannum) >= 100
+ORDER BY std_sprice DESC; 
+
+
+-- Exercise 8 --
+-- Examine all the transactions for the sku with the greatest standard deviation in sprice, but only consider skus that are part of more than 100 transactions.
+
+SELECT DISTINCT(s.sku) AS sku, s.brand, STDDEV_SAMP(t.sprice) AS std_sprice, COUNT(distinct(t.trannum)) AS distinct_transactions
+FROM skuinfo s 
+ JOIN trnsact t
+  ON s.sku=t.sku
+WHERE stype='P' AND s.sku IS NOT NULL
+GROUP BY sku 
+HAVING distinct_transactions >= 100
+ORDER BY std_sprice DESC;

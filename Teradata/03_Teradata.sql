@@ -131,3 +131,27 @@ WHERE stype='P' AND s.sku IS NOT NULL
 GROUP BY sku 
 HAVING distinct_transactions >= 100
 ORDER BY std_sprice DESC;
+
+
+-- Exercise 9 --
+-- What was the average daily revenue Dillard’s brought in during each month of the year?
+SELECT month_num,
+      SUM(dates_num) AS num_days_in_month,
+      SUM(total_revenue)/SUM(dates_num) AS avg_monthly_rev
+FROM (SELECT EXTRACT(MONTH FROM saledate) AS month_num,
+              EXTRACT(YEAR FROM saledate) AS year_num,
+              COUNT(DISTINCT saledate) AS dates_num,
+              SUM(amt) AS total_revenue
+      FROM trnsact
+      WHERE stype = 'P' AND saledate < '2005-08-01'
+      GROUP BY month_num, year_num
+      HAVING dates_num >= 20
+      ) AS d
+GROUP BY month_num
+ORDER BY avg_monthly_rev DESC;
+
+
+-- Exercise 10 --
+-- Which department, in which city and state of what store, had the greatest % increase in average daily sales revenue from Nov to Dec?
+
+
